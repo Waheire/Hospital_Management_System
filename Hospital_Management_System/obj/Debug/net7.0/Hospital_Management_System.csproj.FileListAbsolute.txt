@@ -66,3 +66,4 @@ C:\Projects\Cohort Exercises\Hospital_Management_System\Hospital_Management_Syst
 C:\Projects\Cohort Exercises\Hospital_Management_System\Hospital_Management_System\obj\Debug\net7.0\Hospital_Management_System.pdb
 C:\Projects\Cohort Exercises\Hospital_Management_System\Hospital_Management_System\obj\Debug\net7.0\Hospital_Management_System.genruntimeconfig.cache
 C:\Projects\Cohort Exercises\Hospital_Management_System\Hospital_Management_System\obj\Debug\net7.0\ref\Hospital_Management_System.dll
+C:\Projects\Cohort Exercises\Hospital_Management_System\Hospital_Management_System\obj\Debug\net7.0\Hospital_Management_System.sourcelink.json

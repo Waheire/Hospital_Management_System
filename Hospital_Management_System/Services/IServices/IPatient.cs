@@ -12,7 +12,7 @@ namespace Hospital_Management_System.Services.IServices
         Task<List<Patient>> GetPatientsAsync();
         Task<Patient> GetPatientByIdAsync(Guid id);
         Task<String> AddPatientAsync(AddPatient patient);
-        Task<string> UpdatePatientAsync(AddPatient newPatient);
+        Task<string> UpdatePatientAsync(Guid id, AddPatient newPatient);
         Task<string> DeletePatientAsync(Patient patient);
     }
 }

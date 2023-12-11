@@ -27,13 +27,15 @@ namespace Hospital_Management_System.Services
                     FirstName = patient.FirstName,
                     LastName = patient.LastName,
                     Email = patient.Email,
+                    RoomId = patient.RoomId
+             
                 };
-                 await _context.AddAsync(newPatient);
+                 await _context.Patients.AddAsync(newPatient);
                 await _context.SaveChangesAsync();
                 return "Patient Added Successfully";
-            } catch 
+            } catch (Exception ex)
             {
-                return "An error occurred!";
+                return $"An error occurred! {ex.Message}";
             }
         }
 
@@ -44,16 +46,23 @@ namespace Hospital_Management_System.Services
                 _context.Remove(patient);
                 await _context.SaveChangesAsync();
                 return "Patient Removed Successfully!";
-            } catch 
+            } catch (Exception ex)
             {
-                return "An Error Occurred!";
+                return $"An Error Occurred! {ex.Message} ";
             }
         }
 
         public async Task<Patient> GetPatientByIdAsync(Guid id)
         {
+            try 
+            {
                 var patient = await _context.Patients.FirstOrDefaultAsync(p => p.PatientId == id);
                 return patient;
+            } catch (Exception ex) 
+            {
+                return new Patient();
+            }
+              
         }
 
         public async Task<List<Patient>> GetPatientsAsync()
@@ -70,17 +79,21 @@ namespace Hospital_Management_System.Services
             }
         }
 
-        public async Task<string> UpdatePatientAsync(AddPatient newPatient)
+        public async Task<string> UpdatePatientAsync(Guid id, AddPatient updatedPatient)
         {
             try
             {
-                await _context.AddAsync(newPatient);
+                var patient = await _context.Patients.Where(x => x.PatientId == id).FirstOrDefaultAsync();
+                patient.FirstName = updatedPatient.FirstName;
+                patient.LastName = updatedPatient.LastName;
+                patient.Email = updatedPatient.Email;
+                _context.Update(patient);
                 await _context.SaveChangesAsync();
                 return "Patient Updated Successfully";
             }
-            catch
+            catch (Exception ex)
             {
-                return "An error occurred!";
+                return $"An error occurred! {ex.Message} ";
             }
         }
     }

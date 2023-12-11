@@ -11,8 +11,8 @@ namespace Hospital_Management_System.Services.IServices
     {
         Task<List<Doctor>> GetDoctorsAsync();
         Task<Doctor> GetDoctortByIdAsync(Guid id);
-        Task<String> AddPatientAsyc(AddDoctor doctor);
-        Task<string> UpdateDoctorAsync(AddDoctor newDoctor);
-        Task<string> DeleteDoctorAsync(Guid Id);
+        Task<String> AddPatientAsync(AddDoctor doctor);
+        Task<string> UpdateDoctorAsync(Guid id, AddDoctor newDoctor);
+        Task<string> DeleteDoctorAsync(Doctor doctor);
     }
 }

@@ -86,7 +86,7 @@ namespace Hospital_Management_System.Controllers
             Guid.TryParse(patientId, out PatientId);
             await DeletePatient(PatientId);
         }
-
+       
         public async Task AddPatientView()
         {
             Console.WriteLine("===============================================================");
@@ -99,8 +99,11 @@ namespace Hospital_Management_System.Controllers
             var LastName = Console.ReadLine();
             Console.WriteLine("Enter Email: ");
             var Email = Console.ReadLine();
-           
-            var newPatient = new AddPatient() { FirstName = FirstName, LastName = LastName, Email = Email };
+            Console.WriteLine("Enter Room Id: ");
+            var roomId = Console.ReadLine();
+            var rId = Guid.Parse(roomId);
+
+            var newPatient = new AddPatient() { FirstName = FirstName, LastName = LastName, Email = Email, RoomId = rId };
             await AddPatient(newPatient);
         }
 
@@ -126,7 +129,7 @@ namespace Hospital_Management_System.Controllers
                 return;
             }
             //Update
-            var response = await patientService.UpdatePatientAsync(updatedPatient);
+            var response = await patientService.UpdatePatientAsync(id, updatedPatient);
             Console.WriteLine(response);
             await PatientInit();
         }
@@ -142,12 +145,12 @@ namespace Hospital_Management_System.Controllers
         public async Task ViewPatients()
         {
            var patients = await patientService.GetPatientsAsync();
-            Console.WriteLine($"PatientID \t\t\t\t FirstName \t\t\t\t LastName  \t\t\t\t Email \t\t\t\t RoomId ");
+            Console.WriteLine($"PatientID \t\t\t FirstName \t\t LastName  \t\t Email \t\t RoomId ");
             foreach ( var patient in patients ) 
             {
-                Console.WriteLine($"{patient.PatientId} \t\t\t\t {patient.FirstName} \t\t\t\t {patient.LastName}  \t\t\t\t {patient.Email} \t\t\t\t {patient.Room.RoomNumber} ");
+                Console.WriteLine($"{patient.PatientId} \t\t\t {patient.FirstName} \t\t {patient.LastName}  \t\t {patient.Email} \t\t {patient.RoomId} ");
             }
-            await PatientInit();
+            //await PatientInit();
         }
     }
 }

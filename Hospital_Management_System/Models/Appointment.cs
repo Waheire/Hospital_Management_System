@@ -11,9 +11,10 @@ namespace Hospital_Management_System.Models
     public class Appointment
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid AppointmentId { get; set; }= Guid.NewGuid();
-        public Patient Patient { get; set; } = new Patient();
-        public Doctor Doctor { get; set; } = new Doctor();
+        public Guid AppointmentId { get; set; } = Guid.NewGuid();
+        public Guid PatientId { get; set; }
+        public Guid DoctorId { get; set; }
+        public DateTime AppointmentDate { get; set; } = DateTime.Now;
+        public TimeSpan AppointmentTime { get; set;} = TimeSpan.Zero;
     }
 }

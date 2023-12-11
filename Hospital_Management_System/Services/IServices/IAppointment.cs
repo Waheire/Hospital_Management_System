@@ -11,8 +11,8 @@ namespace Hospital_Management_System.Services.IServices
     {
         Task<List<Appointment>> GetAppointmentsAsync();
         Task<Appointment> GetAppointmentByIdAsync(Guid id);
-        Task<String> AddAppointmentAsyc(AddAppointment appointment);
-        Task<string> UpdateAppointmentAsync(AddAppointment newAppointment);
-        Task<string> DeleteAppointmentAsync(Guid Id);
+        Task<String> AddAppointmentAsync(AddAppointment appointment);
+        Task<string> UpdateAppointmentAsync(Guid id, AddAppointment newAppointment);
+        Task<string> DeleteAppointmentAsync(Appointment appointment);
     }
 }

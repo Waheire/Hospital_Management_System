@@ -1,6 +1,7 @@
 ﻿using Hospital_Management_System.Data;
 using Hospital_Management_System.Models;
 using Hospital_Management_System.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,30 +19,76 @@ namespace Hospital_Management_System.Services
             _context = new AppDbContext();
         }
 
-
-        public Task<string> AddRoomAsyc(AddRoom room)
+        public async Task<string> AddRoomAsync(AddRoom room)
         {
-            throw new NotImplementedException();
+            try 
+            {
+                Room newRoom = new Room()
+                {
+                    RoomNumber = room.RoomNumber,
+                    RoomType = room.RoomType,
+                };
+                await _context.AddAsync(newRoom);
+                await _context.SaveChangesAsync();
+                return "Room Added Successfully";
+            } catch (Exception ex)
+            {
+                return $"An Error Occurred! {ex.Message}";
+            }
         }
 
-        public Task<string> DeleteRoomAsync(Guid Id)
+        public async Task<string> DeleteRoomAsync(Room room)
         {
-            throw new NotImplementedException();
+            try 
+            {
+                _context.Remove(room);
+                await _context.SaveChangesAsync();
+                return "Room Successfully Deleted!";
+            } catch 
+            {
+                return "An Error Occurred!";
+            }
         }
 
-        public Task<Room> GetRoomByIdAsync(Guid id)
+        public async Task<Room> GetRoomByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            try 
+            {
+                var room = await _context.Rooms.FirstOrDefaultAsync(r => r.RoomId == id);
+                return room;
+            } catch (Exception ex)
+            {
+                return new Room() { };
+            }
         }
 
-        public Task<List<Room>> GetRoomsAsync()
+        public async Task<List<Room>> GetRoomsAsync()
         {
-            throw new NotImplementedException();
+            try 
+            {
+              var rooms = await _context.Rooms.ToListAsync();
+                return rooms;
+            } catch 
+            {
+                return new List<Room>();
+            }
         }
 
-        public Task<string> UpdateRoomAsync(AddRoom newRoom)
+        public async Task<string> UpdateRoomAsync(Guid id, AddRoom updatedRoom)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var room = await _context.Rooms.Where(r => r.RoomId == id).FirstOrDefaultAsync();
+                room.RoomNumber = updatedRoom.RoomNumber;
+                room.RoomType = updatedRoom.RoomType;
+                _context.Update(room);
+                await _context.SaveChangesAsync();
+                return "Room Updated Successfully";
+            }
+            catch (Exception ex)
+            {
+                return $"An Error Occurred! \n{ex.Message}";
+            }
         }
     }
 }
