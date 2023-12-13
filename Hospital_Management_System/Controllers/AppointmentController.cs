@@ -11,6 +11,9 @@ namespace Hospital_Management_System.Controllers
     public class AppointmentController
     {
         AppointmentService appointmentService = new AppointmentService();
+        PatientService patientService = new PatientService();
+        DoctorService doctorService = new DoctorService();
+        RoomService roomService = new RoomService();
 
         public async Task AppointmentInit()
         {
@@ -135,11 +138,16 @@ namespace Hospital_Management_System.Controllers
             Guid dID = Guid.Parse(doctorId);
             Console.WriteLine("Enter Date: ");
             var date = Console.ReadLine();
-            DateTime dateTime = DateTime.Parse(date);
+            var format = "yyy-MM-dd";
+            DateTime dateTime;
+            DateTime.TryParseExact(date, format, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces |
+                               System.Globalization.DateTimeStyles.AdjustToUniversal, out dateTime);
             Console.WriteLine("Enter Time: ");
             var time = Console.ReadLine();
-            TimeSpan timeSpan = TimeSpan.Parse(time);
-
+            var TimeFormat = "HHmmss";
+            TimeSpan timeSpan;
+            TimeSpan.TryParseExact(time, format, null, out timeSpan);
+            //TimeSpan timeSpan = TimeSpan.Parse(time);
 
             var newAppointment = new AddAppointment() { PatientId = pID, DoctorId = dID, AppointmentDate = dateTime, AppointmentTime= timeSpan};
             await AddAppointment(newAppointment);
@@ -156,10 +164,33 @@ namespace Hospital_Management_System.Controllers
         private async Task ViewAppointments()
         {
             var appointments = await appointmentService.GetAppointmentsAsync();
-            Console.WriteLine($"Appointment ID \t\t\t\t Patient ID \t Doctor ID  \t Appointment Date \t Appointment Time");
-            foreach (var appointment in appointments)
+            var doctors = await doctorService.GetDoctorsAsync();
+            var patients = await patientService.GetPatientsAsync();
+            var rooms = await roomService.GetRoomsAsync();
+            var results = from appointment in appointments
+                          join doctor in doctors on appointment.DoctorId equals doctor.DoctorId
+                          join patient in patients on appointment.PatientId equals patient.PatientId
+                          join room in rooms on appointment.PatientId equals room.RoomId
+                          select new
+                          {
+                              AppointmentId = appointment.AppointmentId,
+                              Patientname = patient.FirstName + patient.LastName,
+                              patientEmail = patient.Email,
+                              DoctorAssigned = doctor.DoctorName,
+                              DoctorSpeciality = doctor.Speciality,
+                              AppointmentDate = appointment.AppointmentDate,
+                              AppointmentTime = appointment.AppointmentTime,
+                              AssignedRoom = room.RoomNumber
+
+                          };
+            Console.WriteLine($"" +
+                $"Appointment ID \t\t\t\t Patient Name \t Patient Email  \t Doctor Assigned \t Doctor's Specialty \t Appointment Date \t Appointment Time \t Room Assigned");
+            foreach (var appointment in results)
             {
-                Console.WriteLine($"{appointment.AppointmentId}  \t {appointment.PatientId} \t {appointment.DoctorId} \t {appointment.AppointmentDate} \t {appointment.AppointmentTime}");
+                Console.WriteLine($"{appointment.AppointmentId}  \t {appointment.Patientname} \t {appointment.patientEmail} \t " +
+                    $"{appointment.DoctorAssigned} \t {appointment.DoctorSpeciality} \t {appointment.AppointmentDate} \t { appointment.AppointmentTime} \t {appointment.AssignedRoom}"
+
+                    );
             }
         }
 
